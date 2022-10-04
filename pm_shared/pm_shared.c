@@ -27,6 +27,8 @@
 #include <stdlib.h> // atoi
 #include <ctype.h>  // isspace
 
+#include "../dlls/tracelog.h"
+
 #ifdef CLIENT_DLL
 	// Spectator Mode
 	int		iJumpSpectator;
@@ -260,6 +262,8 @@ void PM_InitTextureTypes()
 
 char PM_FindTextureType( char *name )
 {
+	TraceLog("PM_FindTextureType(%s)", name);
+	
 	int left, right, pivot;
 	int val;
 
@@ -3314,6 +3318,8 @@ and client.  This will ensure that prediction behaves appropriately.
 
 void PM_Move ( struct playermove_s *ppmove, int server )
 {
+	TraceLog("PM_Move(%p, %d)", ppmove, server);
+	
 	assert( pm_shared_initialized );
 
 	pmove = ppmove;
@@ -3356,6 +3362,8 @@ int PM_GetPhysEntInfo( int ent )
 
 void PM_Init( struct playermove_s *ppmove )
 {
+	TraceLog("PM_Init(%p)", ppmove);
+	
 	assert( !pm_shared_initialized );
 
 	pmove = ppmove;
