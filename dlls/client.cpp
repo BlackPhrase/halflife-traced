@@ -1986,3 +1986,51 @@ int AllowLagCompensation( void )
 	
 	return 1;
 }
+
+/*
+================================
+ShouldCollide
+
+  Called when the engine believes two entities are about to collide. Return 0 if you
+  want the two entities to just pass through each other without colliding or calling the
+  touch function.
+================================
+*/
+int ShouldCollide( edict_t *pentTouched, edict_t *pentOther )
+{
+	TraceLog("ShouldCollide(%p, %p)", pentTouched, pentOther);
+	
+	// To make this a fast check, use iuser4 for the discs to know what other discs they should collide with
+	if ( pentTouched->v.iuser4 != 0 && pentOther->v.iuser4 != 0 )
+	{
+		// Two friendly discs will have matching iuser4's
+		if ( pentTouched->v.iuser4 == pentOther->v.iuser4 )
+		{
+			return 0;
+		}
+
+		// Discs hitting their owners
+		CBaseEntity *pTouched = CBaseEntity::Instance(pentTouched);
+		CBaseEntity *pOther = CBaseEntity::Instance(pentOther);
+		/*
+		if ( pOther->IsDisc() && pTouched->IsPlayer() && ((CDisc*)pOther)->m_hOwner == pTouched )
+			return 0;
+		if ( pTouched->IsDisc() && pOther->IsPlayer() && ((CDisc*)pTouched)->m_hOwner == pOther )
+			return 0;
+		*/
+		//if ( pOther->IsDisc() || pTouched->IsDisc() )
+			//return 0;
+	}
+
+	return 1;
+}
+
+void CvarValue( const edict_t *pEnt, const char *value )
+{
+	TraceLog("CvarValue(%p, %s)", pEnt, value);
+};
+
+void CvarValue2( const edict_t *pEnt, int requestID, const char *cvarName, const char *value )
+{
+	TraceLog("CvarValue2(%p, %d, %s, %s)", pEnt, requestID, cvarName, value);
+};

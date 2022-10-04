@@ -27,6 +27,8 @@ extern "C" void PM_Move ( struct playermove_s *ppmove, int server );
 extern "C" void PM_Init ( struct playermove_s *ppmove  );
 extern "C" char PM_FindTextureType( char *name );
 
+void OnFreeEntPrivateData(edict_s *pEdict);
+
 extern Vector VecBModelOrigin( entvars_t* pevBModel );
 extern DLL_GLOBAL Vector		g_vecAttackDir;
 extern DLL_GLOBAL int			g_iSkillLevel;
@@ -95,6 +97,15 @@ static DLL_FUNCTIONS gFunctionTable =
 	AllowLagCompensation,		//pfnAllowLagCompensation
 };
 
+NEW_DLL_FUNCTIONS gNewDLLFunctions =
+{
+	OnFreeEntPrivateData,		//pfnOnFreeEntPrivateData
+	GameDLLShutdown,			//pfnGameShutdown
+	ShouldCollide,				//pfnShouldCollide
+	CvarValue,					//pfnCvarValue
+	CvarValue2,					//pfnCvarValue2
+};
+
 static void SetObjectCollisionBox( entvars_t *pev );
 
 extern "C" {
@@ -124,6 +135,20 @@ int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion )
 	}
 	
 	memcpy( pFunctionTable, &gFunctionTable, sizeof( DLL_FUNCTIONS ) );
+	return TRUE;
+}
+
+int GetNewDLLFunctions(NEW_DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion)
+{
+	TraceLog("GetNewDLLFunctions(%p, %p)", pFunctionTable, interfaceVersion);
+	
+	if(!pFunctionTable || *interfaceVersion != NEW_DLL_FUNCTIONS_VERSION)
+	{
+		*interfaceVersion = NEW_DLL_FUNCTIONS_VERSION;
+		return FALSE;
+	}
+
+	memcpy(pFunctionTable, &gNewDLLFunctions, sizeof(gNewDLLFunctions));
 	return TRUE;
 }
 
@@ -296,6 +321,15 @@ void DispatchSave( edict_t *pent, SAVERESTOREDATA *pSaveData )
 	}
 }
 
+void OnFreeEntPrivateData(edict_s *pEdict)
+{
+	TraceLog("OnFreeEntPrivateData(%p)", pEdict);
+	
+	if(pEdict && pEdict->pvPrivateData)
+	{
+		((CBaseEntity*)pEdict->pvPrivateData)->~CBaseEntity();
+	}
+}
 
 // Find the matching global entity.  Spit out an error if the designer made entities of
 // different classes with the same global name
