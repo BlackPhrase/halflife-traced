@@ -84,7 +84,9 @@ called when a player connects to a server
 ============
 */
 BOOL ClientConnect( edict_t *pEntity, const char *pszName, const char *pszAddress, char szRejectReason[ 128 ]  )
-{	
+{
+	TraceLog("ClientConnect(%p, %s, %s, %s)", pEntity, pszName, pszAddress, szRejectReason);
+	
 	return g_pGameRules->ClientConnected( pEntity, pszName, pszAddress, szRejectReason );
 
 // a client connecting during an intermission can cause problems
@@ -105,6 +107,8 @@ GLOBALS ASSUMED SET:  g_fGameOver
 */
 void ClientDisconnect( edict_t *pEntity )
 {
+	TraceLog("ClientDisconnect(%p)", pEntity);
+	
 	if (g_fGameOver)
 		return;
 
@@ -167,6 +171,8 @@ GLOBALS ASSUMED SET:  g_ulModelIndexPlayer
 */
 void ClientKill( edict_t *pEntity )
 {
+	TraceLog("ClientKill(%p)", pEntity);
+	
 	entvars_t *pev = &pEntity->v;
 
 	CBasePlayer *pl = (CBasePlayer*) CBasePlayer::Instance( pev );
@@ -194,6 +200,8 @@ called each time a player is spawned
 */
 void ClientPutInServer( edict_t *pEntity )
 {
+	TraceLog("ClientPutInServer(%p)", pEntity);
+	
 	CBasePlayer *pPlayer;
 
 	entvars_t *pev = &pEntity->v;
@@ -500,6 +508,8 @@ extern float g_flWeaponCheat;
 // Use CMD_ARGV,  CMD_ARGV, and CMD_ARGC to get pointers the character string command.
 void ClientCommand( edict_t *pEntity )
 {
+	TraceLog("ClientCommand(%p)", pEntity);
+	
 	const char *pcmd = CMD_ARGV(0);
 	const char *pstr;
 
@@ -625,6 +635,8 @@ it gets sent into the rest of the engine.
 */
 void ClientUserInfoChanged( edict_t *pEntity, char *infobuffer )
 {
+	TraceLog("ClientUserInfoChanged(%p, %s)", pEntity, infobuffer);
+	
 	// Is the client spawned yet?
 	if ( !pEntity->pvPrivateData )
 		return;
@@ -686,6 +698,8 @@ static int g_serveractive = 0;
 
 void ServerDeactivate( void )
 {
+	TraceLog("ServerDeactivate()");
+	
 	// It's possible that the engine will call this function more times than is necessary
 	//  Therefore, only run it one time for each call to ServerActivate 
 	if ( g_serveractive != 1 )
@@ -701,6 +715,8 @@ void ServerDeactivate( void )
 
 void ServerActivate( edict_t *pEdictList, int edictCount, int clientMax )
 {
+	TraceLog("ServerActivate(%p, %d, %d)", pEdictList, edictCount, clientMax);
+	
 	int				i;
 	CBaseEntity		*pClass;
 
@@ -743,6 +759,8 @@ Called every frame before physics are run
 */
 void PlayerPreThink( edict_t *pEntity )
 {
+	TraceLog("PlayerPreThink(%p)", pEntity);
+	
 	entvars_t *pev = &pEntity->v;
 	CBasePlayer *pPlayer = (CBasePlayer *)GET_PRIVATE(pEntity);
 
@@ -759,6 +777,8 @@ Called every frame after physics are run
 */
 void PlayerPostThink( edict_t *pEntity )
 {
+	TraceLog("PlayerPostThink(%p)", pEntity);
+	
 	entvars_t *pev = &pEntity->v;
 	CBasePlayer *pPlayer = (CBasePlayer *)GET_PRIVATE(pEntity);
 
@@ -770,11 +790,14 @@ void PlayerPostThink( edict_t *pEntity )
 
 void ParmsNewLevel( void )
 {
+	TraceLog("ParmsNewLevel()");
 }
 
 
 void ParmsChangeLevel( void )
 {
+	TraceLog("ParmsChangeLevel()");
+	
 	// retrieve the pointer to the save data
 	SAVERESTOREDATA *pSaveData = (SAVERESTOREDATA *)gpGlobals->pSaveData;
 
@@ -788,6 +811,8 @@ void ParmsChangeLevel( void )
 //
 void StartFrame( void )
 {
+	TraceLog("StartFrame()");
+	
 	if ( g_pGameRules )
 		g_pGameRules->Think();
 
@@ -923,6 +948,8 @@ Returns the descriptive name of this .dll.  E.g., Half-Life, or Team Fortress 2
 */
 const char *GetGameDescription()
 {
+	TraceLog("GetGameDescription()");
+	
 	if ( g_pGameRules ) // this function may be called before the world has spawned, and the game rules initialized
 		return g_pGameRules->GetGameDescription();
 	else
@@ -938,6 +965,8 @@ Engine is going to shut down, allows setting a breakpoint in game .dll to catch 
 */
 void Sys_Error( const char *error_string )
 {
+	TraceLog("Sys_Error(%s)", error_string);
+	
 	// Default case, do nothing.  MOD AUTHORS:  Add code ( e.g., _asm { int 3 }; here to cause a breakpoint for debugging your game .dlls
 }
 
@@ -952,6 +981,8 @@ animation right now.
 */
 void PlayerCustomization( edict_t *pEntity, customization_t *pCust )
 {
+	TraceLog("PlayerCustomization(%p, %p)", pEntity, pCust);
+	
 	entvars_t *pev = &pEntity->v;
 	CBasePlayer *pPlayer = (CBasePlayer *)GET_PRIVATE(pEntity);
 
@@ -992,6 +1023,8 @@ A spectator has joined the game
 */
 void SpectatorConnect( edict_t *pEntity )
 {
+	TraceLog("SpectatorConnect(%p)", pEntity);
+	
 	entvars_t *pev = &pEntity->v;
 	CBaseSpectator *pPlayer = (CBaseSpectator *)GET_PRIVATE(pEntity);
 
@@ -1008,6 +1041,8 @@ A spectator has left the game
 */
 void SpectatorDisconnect( edict_t *pEntity )
 {
+	TraceLog("SpectatorDisconnect(%p)", pEntity);
+	
 	entvars_t *pev = &pEntity->v;
 	CBaseSpectator *pPlayer = (CBaseSpectator *)GET_PRIVATE(pEntity);
 
@@ -1024,6 +1059,8 @@ A spectator has sent a usercmd
 */
 void SpectatorThink( edict_t *pEntity )
 {
+	TraceLog("SpectatorThink(%p)", pEntity);
+	
 	entvars_t *pev = &pEntity->v;
 	CBaseSpectator *pPlayer = (CBaseSpectator *)GET_PRIVATE(pEntity);
 
@@ -1051,6 +1088,8 @@ NOTE:  Do not cache the values of pas and pvs, as they depend on reusable memory
 */
 void SetupVisibility( edict_t *pViewEntity, edict_t *pClient, unsigned char **pvs, unsigned char **pas )
 {
+	TraceLog("SetupVisibility(%p, %p, %p, %p)", pViewEntity, pClient, pvs, pas);
+	
 	Vector org;
 	edict_t *pView = pClient;
 
@@ -1094,6 +1133,8 @@ we could also use the pas/ pvs that we set in SetupVisibility, if we wanted to. 
 */
 int AddToFullPack( struct entity_state_s *state, int e, edict_t *ent, edict_t *host, int hostflags, int player, unsigned char *pSet )
 {
+	TraceLog("AddToFullPack(%p, %d, %p, %p, %d, %d, %p)", state, e, ent, host, hostflags, player, pSet);
+	
 	int					i;
 
 	// don't send if flagged for NODRAW and it's not the host getting the message
@@ -1283,6 +1324,8 @@ Creates baselines used for network encoding, especially for player data since pl
 */
 void CreateBaseline( int player, int eindex, struct entity_state_s *baseline, struct edict_s *entity, int playermodelindex, vec3_t player_mins, vec3_t player_maxs )
 {
+	TraceLog("CreateBaseline(%d, %d, %p, %p, %d, %p, %p)", player, eindex, baseline, entity, playermodelindex, player_mins, player_maxs);
+	
 	baseline->origin		= entity->v.origin;
 	baseline->angles		= entity->v.angles;
 	baseline->frame			= entity->v.frame;
@@ -1577,6 +1620,8 @@ Allows game .dll to override network encoding of certain types of entities and t
 */
 void RegisterEncoders( void )
 {
+	TraceLog("RegisterEncoders()");
+	
 	DELTA_ADDENCODER( "Entity_Encode", Entity_Encode );
 	DELTA_ADDENCODER( "Custom_Encode", Custom_Encode );
 	DELTA_ADDENCODER( "Player_Encode", Player_Encode );
@@ -1584,6 +1629,8 @@ void RegisterEncoders( void )
 
 int GetWeaponData( struct edict_s *player, struct weapon_data_s *info )
 {
+	TraceLog("GetWeaponData(%p, %p)", player, info);
+	
 #if defined( CLIENT_WEAPONS )
 	int i;
 	weapon_data_t *item;
@@ -1658,6 +1705,8 @@ engine sets cd to 0 before calling.
 */
 void UpdateClientData ( const edict_t *ent, int sendweapons, struct clientdata_s *cd )
 {
+	TraceLog("UpdateClientData(%p, %d, %p)", ent, sendweapons, cd);
+	
 	if ( !ent || !ent->pvPrivateData )
 		return;
 	entvars_t *		pev	= (entvars_t *)&ent->v;
@@ -1776,6 +1825,8 @@ This is the time to examine the usercmd for anything extra.  This call happens e
 */
 void CmdStart( const edict_t *player, const struct usercmd_s *cmd, unsigned int random_seed )
 {
+	TraceLog("CmdStart(%p, %p, %d)", player, cmd, random_seed);
+	
 	entvars_t *pev = (entvars_t *)&player->v;
 	CBasePlayer *pl = dynamic_cast< CBasePlayer *>( CBasePlayer::Instance( pev ) );
 
@@ -1799,6 +1850,8 @@ Each cmdstart is exactly matched with a cmd end, clean up any group trace flags,
 */
 void CmdEnd ( const edict_t *player )
 {
+	TraceLog("CmdEnd(%p)", player);
+	
 	entvars_t *pev = (entvars_t *)&player->v;
 	CBasePlayer *pl = dynamic_cast< CBasePlayer *>( CBasePlayer::Instance( pev ) );
 
@@ -1820,6 +1873,8 @@ ConnectionlessPacket
 */
 int	ConnectionlessPacket( const struct netadr_s *net_from, const char *args, char *response_buffer, int *response_buffer_size )
 {
+	TraceLog("ConnectionlessPacket(%p, %s, %p, %p)", net_from, args, response_buffer, response_buffer_size);
+	
 	// Parse stuff from args
 	int max_buffer_size = *response_buffer_size;
 
@@ -1841,6 +1896,8 @@ GetHullBounds
 */
 int GetHullBounds( int hullnumber, float *mins, float *maxs )
 {
+	TraceLog("GetHullBounds(%d, %p, %p)", hullnumber, mins, maxs);
+	
 	int iret = 0;
 
 	switch ( hullnumber )
@@ -1875,6 +1932,8 @@ to be created during play ( e.g., grenades, ammo packs, projectiles, corpses, et
 */
 void CreateInstancedBaselines ( void )
 {
+	TraceLog("CreateInstancedBaselines()");
+	
 	int iret = 0;
 	entity_state_t state;
 
@@ -1897,6 +1956,8 @@ One of the ENGINE_FORCE_UNMODIFIED files failed the consistency check for the sp
 */
 int	InconsistentFile( const edict_t *player, const char *filename, char *disconnect_message )
 {
+	TraceLog("InconsistentFile(%p, %s, %p)", player, filename, disconnect_message);
+	
 	// Server doesn't care?
 	if ( CVAR_GET_FLOAT( "mp_consistency" ) != 1 )
 		return 0;
@@ -1921,5 +1982,7 @@ AllowLagCompensation
 */
 int AllowLagCompensation( void )
 {
+	TraceLog("AllowLagCompensation()");
+	
 	return 1;
 }

@@ -101,6 +101,8 @@ extern "C" {
 
 	int GetEntityAPI( DLL_FUNCTIONS *pFunctionTable, int interfaceVersion )
 {
+	TraceLog("GetEntityAPI(%p, %d)", pFunctionTable, interfaceVersion);
+	
 	if ( !pFunctionTable || interfaceVersion != INTERFACE_VERSION )
 	{
 		return FALSE;
@@ -112,6 +114,8 @@ extern "C" {
 
 int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion )
 {
+	TraceLog("GetEntityAPI2(%p, %p)", pFunctionTable, interfaceVersion);
+	
 	if ( !pFunctionTable || *interfaceVersion != INTERFACE_VERSION )
 	{
 		// Tell engine what version we had, so it can figure out who is out of date.
@@ -128,6 +132,8 @@ int GetEntityAPI2( DLL_FUNCTIONS *pFunctionTable, int *interfaceVersion )
 
 int DispatchSpawn( edict_t *pent )
 {
+	TraceLog("DispatchSpawn(%p)", pent);
+	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pent);
 
 	if (pEntity)
@@ -180,6 +186,8 @@ int DispatchSpawn( edict_t *pent )
 
 void DispatchKeyValue( edict_t *pentKeyvalue, KeyValueData *pkvd )
 {
+	TraceLog("DispatchKeyValue(%p, %p)", pentKeyvalue, pkvd);
+	
 	if ( !pkvd || !pentKeyvalue )
 		return;
 
@@ -205,6 +213,8 @@ void DispatchKeyValue( edict_t *pentKeyvalue, KeyValueData *pkvd )
 BOOL gTouchDisabled = FALSE;
 void DispatchTouch( edict_t *pentTouched, edict_t *pentOther )
 {
+	TraceLog("DispatchTouch(%p, %p)", pent, pentOther);
+	
 	if ( gTouchDisabled )
 		return;
 
@@ -218,6 +228,8 @@ void DispatchTouch( edict_t *pentTouched, edict_t *pentOther )
 
 void DispatchUse( edict_t *pentUsed, edict_t *pentOther )
 {
+	TraceLog("DispatchUse(%p, %p)", pent, pentOther);
+	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pentUsed);
 	CBaseEntity *pOther = (CBaseEntity *)GET_PRIVATE(pentOther);
 
@@ -227,6 +239,8 @@ void DispatchUse( edict_t *pentUsed, edict_t *pentOther )
 
 void DispatchThink( edict_t *pent )
 {
+	TraceLog("DispatchThink(%p)", pent);
+	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pent);
 	if (pEntity)
 	{
@@ -239,6 +253,8 @@ void DispatchThink( edict_t *pent )
 
 void DispatchBlocked( edict_t *pentBlocked, edict_t *pentOther )
 {
+	TraceLog("DispatchBlocked(%p, %p)", pent, pentOther);
+	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE( pentBlocked );
 	CBaseEntity *pOther = (CBaseEntity *)GET_PRIVATE( pentOther );
 
@@ -248,6 +264,8 @@ void DispatchBlocked( edict_t *pentBlocked, edict_t *pentOther )
 
 void DispatchSave( edict_t *pent, SAVERESTOREDATA *pSaveData )
 {
+	TraceLog("DispatchSave(%p, %p)", pent,  pSaveData);
+	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pent);
 	
 	if ( pEntity && pSaveData )
@@ -300,6 +318,8 @@ CBaseEntity *FindGlobalEntity( string_t classname, string_t globalname )
 
 int DispatchRestore( edict_t *pent, SAVERESTOREDATA *pSaveData, int globalEntity )
 {
+	TraceLog("DispatchRestore(%p, %p, %d)", pent, pSaveData, globalEntity);
+	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pent);
 
 	if ( pEntity && pSaveData )
@@ -412,6 +432,8 @@ int DispatchRestore( edict_t *pent, SAVERESTOREDATA *pSaveData, int globalEntity
 
 void DispatchObjectCollsionBox( edict_t *pent )
 {
+	TraceLog("DispatchObjectCollsionBox(%p)", pent);
+	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pent);
 	if (pEntity)
 	{
@@ -424,6 +446,8 @@ void DispatchObjectCollsionBox( edict_t *pent )
 
 void SaveWriteFields( SAVERESTOREDATA *pSaveData, const char *pname, void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount )
 {
+	TraceLog("SaveWriteFields(%p, %s, %p, %p, %d)", pSaveData, pname, pBaseData, pFields, fieldCount);
+	
 	CSave saveHelper( pSaveData );
 	saveHelper.WriteFields( pname, pBaseData, pFields, fieldCount );
 }
@@ -431,6 +455,8 @@ void SaveWriteFields( SAVERESTOREDATA *pSaveData, const char *pname, void *pBase
 
 void SaveReadFields( SAVERESTOREDATA *pSaveData, const char *pname, void *pBaseData, TYPEDESCRIPTION *pFields, int fieldCount )
 {
+	TraceLog("SaveReadFields(%p, %s, %p, %p, %d)", pSaveData, pname, pBaseData, pFields, fieldCount);
+	
 	CRestore restoreHelper( pSaveData );
 	restoreHelper.ReadFields( pname, pBaseData, pFields, fieldCount );
 }
