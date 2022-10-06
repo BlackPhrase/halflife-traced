@@ -238,7 +238,7 @@ void DispatchKeyValue( edict_t *pentKeyvalue, KeyValueData *pkvd )
 BOOL gTouchDisabled = FALSE;
 void DispatchTouch( edict_t *pentTouched, edict_t *pentOther )
 {
-	TraceLog("DispatchTouch(%p, %p)", pent, pentOther);
+	TraceLog("DispatchTouch(%p, %p)", pentTouched, pentOther);
 	
 	if ( gTouchDisabled )
 		return;
@@ -253,7 +253,7 @@ void DispatchTouch( edict_t *pentTouched, edict_t *pentOther )
 
 void DispatchUse( edict_t *pentUsed, edict_t *pentOther )
 {
-	TraceLog("DispatchUse(%p, %p)", pent, pentOther);
+	TraceLog("DispatchUse(%p, %p)", pentUsed, pentOther);
 	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE(pentUsed);
 	CBaseEntity *pOther = (CBaseEntity *)GET_PRIVATE(pentOther);
@@ -278,7 +278,7 @@ void DispatchThink( edict_t *pent )
 
 void DispatchBlocked( edict_t *pentBlocked, edict_t *pentOther )
 {
-	TraceLog("DispatchBlocked(%p, %p)", pent, pentOther);
+	TraceLog("DispatchBlocked(%p, %p)", pentBlocked, pentOther);
 	
 	CBaseEntity *pEntity = (CBaseEntity *)GET_PRIVATE( pentBlocked );
 	CBaseEntity *pOther = (CBaseEntity *)GET_PRIVATE( pentOther );

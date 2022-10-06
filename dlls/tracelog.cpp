@@ -1,6 +1,7 @@
 /// @file
 
 #include <cstdio>
+#include <cstdarg>
 
 #include "tracelog.h"
 
@@ -36,9 +37,9 @@ void TraceLog(const char *asMsg, ...)
 	va_list vArgList;
 	char sFormatted[1024]{};
 	
-	va_start(vArgList);
+	va_start(vArgList, asMsg);
 	vsprintf(sFormatted, asMsg, vArgList);
 	va_end(vArgList);
 	
-	Write(sFormatted);
+	gTraceLog.Write(sFormatted);
 };

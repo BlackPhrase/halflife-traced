@@ -31,7 +31,7 @@ globalvars_t  *gpGlobals;
 
 #undef DLLEXPORT
 #ifdef _WIN32
-#define DLLEXPORT __stdcall
+#define DLLEXPORT _declspec( dllexport )
 #else
 #define DLLEXPORT __attribute__ ((visibility("default")))
 #endif
